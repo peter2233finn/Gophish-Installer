@@ -30,6 +30,7 @@ function configureGophish {
 }
 checkInstalled evilginx2 evilginx2
 checkInstalled unzip unzip
+checkInstalled sqlite3 sqlite3
 
 askInstall "Gophish CLI (by gosecure on Github)" "git clone --recursive https://github.com/gosecure/gophish-cli"
 askInstall "gophish" "wget https://github.com/gophish/gophish/releases/download/v0.12.1/gophish-v0.12.1-linux-64bit.zip"
