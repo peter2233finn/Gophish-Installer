@@ -28,7 +28,8 @@ function configureGophish {
 	API=$(sqlite3 gophish.db "SELECT api_key FROM users")
 	curl --insecure -X POST -H "Content-Type: application/json" -H "Authorization: $API" --data "$2" https://localhost:3333${1} -v
 }
-checkInstalled unzip evilginx2 evilginx2
+checkInstalled evilginx2 evilginx2
+checkInstalled unzip unzip
 
 askInstall "Gophish CLI (by gosecure on Github)" "git clone --recursive https://github.com/gosecure/gophish-cli"
 askInstall "gophish" "wget https://github.com/gophish/gophish/releases/download/v0.12.1/gophish-v0.12.1-linux-64bit.zip"
