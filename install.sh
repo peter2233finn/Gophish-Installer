@@ -75,7 +75,7 @@ read x; clear
 
 
 echo "MailHog will be started and the portal will be binded to port 8025. Gophish Admin portal is running on port 3333 with the credentials: "
-(./gophish 2>&1| grep 'Please login with the username') &
+(sudo ./gophish 2>&1| grep 'Please login with the username') &
 
 echo "Please login to the Gophish CLI and change the password. The next steps will not work otherwise"
 read x
