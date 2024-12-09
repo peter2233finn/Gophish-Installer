@@ -28,6 +28,13 @@ function configureGophish {
 	API=$(sqlite3 gophish.db "SELECT api_key FROM users")
 	curl --insecure -X POST -H "Content-Type: application/json" -H "Authorization: $API" --data "$2" https://localhost:3333${1} -v
 }
+
+# Add kali repos
+echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" | sudo tee /etc/apt/sources.list.d/kali.list
+wget -q -O - https://archive.kali.org/archive-key.asc | sudo apt-key add -
+sudo apt update
+
+
 checkInstalled evilginx2 evilginx2
 checkInstalled unzip unzip
 checkInstalled sqlite3 sqlite3
