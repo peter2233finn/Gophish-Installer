@@ -1,10 +1,23 @@
 #! /bin/bash
 
+logfile="installer.log"
+
+
+
+function runcmd {
+	echo "running command: \"$*\""
+	printf "\n\n\n=================================================================\n" >> ${logfile}
+	echo "Output for command: $*" >> ${logfile}
+	$* >> ${logfile} 2>&1	
+
+
+}
+
 # These are necessary apt binaries
 function checkInstalled {
 	if [ -z "$(which $1)" ]; then
 		echo not installed: $1
-	#	sudo apt -y install $2
+		runcmd "sudo apt -y install $2"
 
 	else
 		echo "$1 is installed"
@@ -16,8 +29,8 @@ function askInstall {
 	echo "Install $1? y/n"
 	read opt
 	if [ "$opt" = "y" ]; then
-		echo "installing $1"
-		$2
+		echo "installing..."
+		runcmd "$2"
 	fi
 
 
@@ -29,16 +42,19 @@ function configureGophish {
 	curl --insecure -X POST -H "Content-Type: application/json" -H "Authorization: $API" --data "$2" https://localhost:3333${1} -v
 }
 
+echo "Logs for all actions taken by this script are logged to ${logfile}"
+
 # Add kali repos
-echo "deb http://http.kali.org/kali kali-rolling main contrib non-free" | sudo tee /etc/apt/sources.list.d/kali.list
-wget -q -O - https://archive.kali.org/archive-key.asc | sudo apt-key add -
-sudo apt update
+
+#runcmd "echo 'deb http://http.kali.org/kali kali-rolling main contrib non-free' | sudo tee /etc/apt/sources.list.d/kali.list"
+#runcmd "wget -q -O - https://archive.kali.org/archive-key.asc | sudo apt-key add -"
+#runcmd "sudo apt update"
 
 
 checkInstalled evilginx2 evilginx2
 checkInstalled unzip unzip
 checkInstalled sqlite3 sqlite3
-checkInstalled net-tools net-tools
+checkInstalled ifconfig net-tools
 
 askInstall "Gophish CLI (by gosecure on Github)" "git clone --recursive https://github.com/gosecure/gophish-cli"
 askInstall "gophish" "wget https://github.com/gophish/gophish/releases/download/v0.12.1/gophish-v0.12.1-linux-64bit.zip"
@@ -46,11 +62,10 @@ askInstall "MailHog (Version 1.0.1)" "wget https://github.com/mailhog/MailHog/re
 
 
 # Setup files
-unzip "gophish-*zip"
-
+runcmd "echo 'n' | unzip gophish-*zip"
 # make executable 
-chmod +x gophish 2> /dev/null
-chmod +x MailHog* 2> /dev/null
+runcmd "chmod +x gophish"
+runcmd "chmod +x MailHog*"
 
 # change config in gophish. Can be customized here
 printf '{                 
@@ -78,16 +93,14 @@ printf '{
 }' > gophish/config.json
 
 printf "\nWill start gophish and mailhog now. Press enter to continue."
-read x; clear
-
 
 echo "MailHog will be started and the portal will be binded to port 8025. Gophish Admin portal is running on port 3333 with the credentials: "
-(sudo ./gophish 2>&1| grep 'Please login with the username') &
+runcmd "sudo ./gophish &"
+sleep 5
+grep -i "Please login with the username" ${logfile} | tr -d '"' | awk '{print "Gophish has started with the initial username " $8" and password "$12}'
+sleep 5
+runcmd "./MailHog_linux_386 &"
 
-echo "Please login to the Gophish CLI and change the password. The next steps will not work otherwise"
-read x
-read x
 
-./MailHog_linux_386 2>/dev/null &
 
 configureGophish '/api/smtp/' '{ "id" : 1, "name":"MailHog", "interface_type":"SMTP", "from_address":"setup@example.com", "host":"127.0.0.1:1025", "username":"", "password":"", "ignore_cert_errors":true, "modified_date": "2024-11-20T14:47:51.4131367-06:00" }'
