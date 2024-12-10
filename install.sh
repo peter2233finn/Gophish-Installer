@@ -31,8 +31,8 @@ function askInstall {
 # for API requests to Gophish
 function configureGophish {
 	API=$(sqlite3 gophish.db "SELECT api_key FROM users")
-	cmd="curl --insecure -X POST -H \"Content-Type: application/json\" -H \"Authorization: $API\" --data \"$2\" https://localhost:3333${1} -v"
-	runcmd "$cmd"
+	curl --insecure -X POST -H \"Content-Type: application/json\" -H \"Authorization: $API\" --data \"$2\" https://localhost:3333${1} -v
+#	runcmd "$cmd"
 }
 
 echo "Logs for all actions taken by this script are logged to ${logfile}"
