@@ -1,16 +1,11 @@
 #! /bin/bash
-
 logfile="installer.log"
-
-
 
 function runcmd {
 	echo "running command: \"$*\""
-	printf "\n\n\n=================================================================\n" >> ${logfile}
+	printf "\n\n\n=========================================\n" >> ${logfile}
 	echo "Output for command: $*" >> ${logfile}
 	$* >> ${logfile} 2>&1	
-
-
 }
 
 # These are necessary apt binaries
@@ -18,7 +13,6 @@ function checkInstalled {
 	if [ -z "$(which $1)" ]; then
 		echo not installed: $1
 		runcmd "sudo apt -y install $2"
-
 	else
 		echo "$1 is installed"
 	fi
@@ -32,23 +26,22 @@ function askInstall {
 		echo "installing..."
 		runcmd "$2"
 	fi
-
-
-
 }
 
+# for API requests to Gophish
 function configureGophish {
 	API=$(sqlite3 gophish.db "SELECT api_key FROM users")
-	curl --insecure -X POST -H "Content-Type: application/json" -H "Authorization: $API" --data "$2" https://localhost:3333${1} -v
+	cmd="curl --insecure -X POST -H \"Content-Type: application/json\" -H \"Authorization: $API\" --data \"$2\" https://localhost:3333${1} -v"
+	runcmd "$cmd"
 }
 
 echo "Logs for all actions taken by this script are logged to ${logfile}"
 
 # Add kali repos
 
-#runcmd "echo 'deb http://http.kali.org/kali kali-rolling main contrib non-free' | sudo tee /etc/apt/sources.list.d/kali.list"
-#runcmd "wget -q -O - https://archive.kali.org/archive-key.asc | sudo apt-key add -"
-#runcmd "sudo apt update"
+runcmd "echo 'deb http://http.kali.org/kali kali-rolling main contrib non-free' | sudo tee /etc/apt/sources.list.d/kali.list"
+runcmd "wget -q -O - https://archive.kali.org/archive-key.asc | sudo apt-key add -"
+runcmd "sudo apt update"
 
 
 checkInstalled evilginx2 evilginx2
@@ -62,7 +55,7 @@ askInstall "MailHog (Version 1.0.1)" "wget https://github.com/mailhog/MailHog/re
 
 
 # Setup files
-runcmd "echo 'n' | unzip gophish-*zip"
+runcmd "unzip gophish-*zip"
 # make executable 
 runcmd "chmod +x gophish"
 runcmd "chmod +x MailHog*"
@@ -90,17 +83,14 @@ printf '{
                 "filename": "",
                 "level": ""
         }
-}' > gophish/config.json
+}' > config.json
 
-printf "\nWill start gophish and mailhog now. Press enter to continue."
 
-echo "MailHog will be started and the portal will be binded to port 8025. Gophish Admin portal is running on port 3333 with the credentials: "
-runcmd "sudo ./gophish &"
+runcmd "./MailHog_linux_386" &
 sleep 5
+runcmd "./gophish" &
+sleep 5
+echo "MailHog will be started and the portal will be binded to port 8025."
 grep -i "Please login with the username" ${logfile} | tr -d '"' | awk '{print "Gophish has started with the initial username " $8" and password "$12}'
-sleep 5
-runcmd "./MailHog_linux_386 &"
-
-
 
 configureGophish '/api/smtp/' '{ "id" : 1, "name":"MailHog", "interface_type":"SMTP", "from_address":"setup@example.com", "host":"127.0.0.1:1025", "username":"", "password":"", "ignore_cert_errors":true, "modified_date": "2024-11-20T14:47:51.4131367-06:00" }'
