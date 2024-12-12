@@ -2,7 +2,7 @@
 # for API requests to Gophish
 function configureGophish {
  API=$(sqlite3 gophish.db "SELECT api_key FROM users")
- curl --insecure -X POST -H "Content-Type: application/json" -H "Authorization: $API" --data "$2" "https://localhost:3333$1" -v
+ curl --insecure -X POST -H "Content-Type: application/json" -H "Authorization: $API" --data "$2" "https://localhost:3333$1"
 # runcmd "$cmd"
 }
 
