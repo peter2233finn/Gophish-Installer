@@ -98,5 +98,4 @@ sleep 5
 echo "MailHog will be started and the portal will be binded to port 8025."
 grep -i "Please login with the username" ${logfile} | tr -d '"' | awk '{print "Gophish has started with the initial username " $8" and password "$12}'
 
-echo 'In google cloud, allow all ports with the command: gcloud compute --project=[PROJECT NAME] firewall-rules create all-ports-allowed --direction=INGRESS --priority=0 --network=default --action=ALLOW --rules=PROTOCOL:PORT,... --source-ranges=0.0.0.0/0 --target-tags=all'
-configureGophish '/api/smtp/' '{ "id" : 1, "name":"MailHog", "interface_type":"SMTP", "from_address":"setup@example.com", "host":"127.0.0.1:1025", "username":"", "password":"", "ignore_cert_errors":true, "modified_date": "2024-11-20T14:47:51.4131367-06:00" }'
+echo 'In google cloud, allow all ports with the command: "gcloud compute firewall-rules create allow-ports-443-80-3333 --allow tcp:443,tcp:80,tcp:3333 --network default --priority 1000 --direction INGRESS --target-tags allow-ports-443-80-333 --description "Allow traffic on ports 443, 80, and 3333"'
