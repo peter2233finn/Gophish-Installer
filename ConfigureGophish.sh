@@ -10,6 +10,9 @@ function configureGophish {
 echo "Uploading Mailhog settings"
 configureGophish '/api/smtp/' '{ "id" : 1, "name":"MailHog2", "interface_type":"SMTP", "from_address":"setup@example.com", "host":"127.0.0.1:1025", "username":"", "password":"", "ignore_cert_errors":true, "modified_date": "2024-11-20T14:47:51.4131367-06:00" }'
 
+echo "Uploading MailGun settings"
+configureGophish '/api/smtp/' '{ "id" : 1, "name":"MailGun", "interface_type":"SMTP", "from_address":"setup@example.com", "host":"smtp.eu.mailgun.org:587", "username":"CHANGE ME", "password":"CHANGE ME", "ignore_cert_errors":true, "modified_date": "2024-11-20T14:47:51.4131367-06:00" }'
+
 echo "Uploading Generic Password Reset Template"
 configureGophish '/api/templates/' '{
  "id" : 1,
