@@ -8,6 +8,7 @@
 - Step 4:		If needed, authorize ports 80, 443, and 3333 in the firewall. This can be done in Google Cloud console by going to "Compute Engine" > "VM instances" and then pasting the command:
 <br>
 gcloud compute firewall-rules create allow-ports-443-80-3333 --allow tcp:443,tcp:80,tcp:3333 --network default --priority 1000 --direction INGRESS --target-tags allow-ports-443-80-333 --description "Allow traffic on ports 443, 80, and 3333"
+<br>
 - Step 5:		Run the Gophish installer script here with the command: "chmod +x install.sh; ./install.sh"
 - Step 6:		Run the configuration script for gophish with the command: "chmod +x ConfigureGophish.sh; ./ConfigureGophish.sh"
 - Step 7:		Login to the Gophish console at https://(Instance IP address):3333 with the username and password provided by the installer script. (This can also be found in the installer.log file)
