@@ -1,6 +1,11 @@
 #! /bin/bash
 logfile="installer.log"
 
+if [ $(id -u) -ne 0 ]; then 
+	echo "Run as root."
+	exit 1
+fi
+
 function runcmd {
 	echo "running command: \"$*\""
 	printf "\n\n\n=========================================\n" >> ${logfile}
