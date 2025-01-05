@@ -58,7 +58,8 @@ askInstall "Gophish CLI (by gosecure on Github)" "git clone --recursive https://
 askInstall "gophish" "wget https://github.com/gophish/gophish/releases/download/v0.12.1/gophish-v0.12.1-linux-64bit.zip"
 askInstall "MailHog (Version 1.0.1)" "wget https://github.com/mailhog/MailHog/releases/download/v1.0.1/MailHog_linux_386"
 
-
+# In case a readme already exists will cause unzip to hang
+rm README.md
 # Setup files
 runcmd "unzip gophish-*zip"
 # make executable 
