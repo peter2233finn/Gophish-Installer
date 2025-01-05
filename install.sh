@@ -45,7 +45,7 @@ echo "Logs for all actions taken by this script are logged to ${logfile}"
 # Add kali repos
 
 runcmd "echo 'deb http://http.kali.org/kali kali-rolling main contrib non-free' | sudo tee /etc/apt/sources.list.d/kali.list"
-runcmd "wget -q -O - https://archive.kali.org/archive-key.asc | sudo apt-key add -"
+wget -q -O - https://archive.kali.org/archive-key.asc | sudo apt-key add -
 runcmd "sudo apt update"
 
 
