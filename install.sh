@@ -6,6 +6,10 @@ if [ $(id -u) -ne 0 ]; then
         exit 1
 fi
 
+if [ ! -z "$(ls)" ]; then 
+        echo 'Please run from an empty directory. either "rm -r *" or "cd" to an empty directory (careful with the rm one).'; 
+fi
+
 function runcmd {
         echo "running command: \"$*\""
         printf "\n\n\n=========================================\n" >> ${logfile}
@@ -121,7 +125,8 @@ config ipv4 ${ip}
 config gophish admin_url https://${ip}:3333
 config gophish api_key ${gophishAPI}"
 
+echo "Evilginx2 (should) be installed and and populated can be run from the terminal with 'evilginx2'"
 echo "MailHog will be started and the portal will be binded to port 8025."
+echo "GoPhish will be started and the portal will be binded to port 3333."
 grep -i "Please login with the username" ${logfile} | tr -d '"' | awk '{print "Gophish has started with the initial username " $8" and password "$12}'
-
-echo 'In google cloud, allow all ports with the command: "gcloud compute firewall-rules create allow-ports-443-80-3333 --allow tcp:443,tcp:80,tcp:3333 --network default --priority 1000 --direction INGRESS --target-tags allow-ports-443-80-333 --description "Allow traffic on ports 443, 80, and 3333"'
+echo 'If you are using google cloud, allow ports 3333, 443 and 80 with the command: "gcloud compute firewall-rules create allow-ports-443-80-3333 --allow tcp:443,tcp:80,tcp:3333 --network default --priority 1000 --direction INGRESS --target-tags allow-ports-443-80-333 --description "Allow traffic on ports 443, 80, and 3333"'
