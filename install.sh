@@ -129,4 +129,4 @@ echo "Evilginx2 (should) be installed and and populated can be run from the term
 echo "MailHog will be started and the portal will be binded to port 8025."
 echo "GoPhish will be started and the portal will be binded to port 3333."
 grep -i "Please login with the username" ${logfile} | tr -d '"' | awk '{print "Gophish has started with the initial username " $8" and password "$12}'
-echo 'If you are using google cloud, allow ports 3333, 443 and 80 with the command: "gcloud compute firewall-rules create allow-ports-443-80-3333 --allow tcp:443,tcp:80,tcp:3333 --network default --priority 1000 --direction INGRESS --target-tags allow-ports-443-80-333 --description "Allow traffic on ports 443, 80, and 3333"'
+echo 'If you are using google cloud, allow ports 3333, 443 and 80 with the command: "gcloud compute firewall-rules create allow-ports-443-80-3333-53 --allow udp:53,tcp:53,tcp:443,tcp:80,tcp:3333 --network default --priority 1000 --direction INGRESS --target-tags allow-ports-443-80-333 --description "Allow traffic on ports 443, 80, and 3333"'
